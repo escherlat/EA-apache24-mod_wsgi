@@ -1,11 +1,11 @@
-Name: ea-apache24-mod_wsgi
+Name: mod_wsgi
 Version: 4.5.7
 Summary: A WSGI compliant interface for hosting Python based web applications on top of the Apache web server
 Release: 1%{?dist}
 License: Apache License, Version 2.0
 Group: System Environment/Daemons
 URL: http://modwsgi.org
-Source: https://github.com/GrahamDumpleton/mod_wsgi/archive/4.5.7.zip
+Source: https://github.com/GrahamDumpleton/mod_wsgi/archive/4.5.7.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: ea-apache24-devel
@@ -17,6 +17,7 @@ Requires: python
 A WSGI compliant interface for hosting Python based web applications on top of the Apache web server
 
 %prep
+%autosetup -n mod_wsgi-%{version}
 %setup
 %{__cat} <<EOF > mod_wsgi.conf
 ### Load the module
@@ -26,18 +27,19 @@ EOF
 
 
 %build
-%configure
+%configure --prefix=%{_sysconfdir}/apache2 --exec-prefix=%{_prefix}
 make %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
 %make_install
+%{__install} -Dp -m0644 mod_wsgi.conf %{buildroot}%{_sysconfdir}/apache2/conf.d/mod_wsgi.conf
 
 %clean
 %{__rm} -rf %{buildroot}
 
 %files
-%{_sysconfdir}/apache2/modules/mod_wsgi.so
+%{_libdir}/apache2/modules/mod_wsgi.so
 %config(noreplace) %{_sysconfdir}/apache2/conf.d/mod_wsgi.conf
 
 %changelog
