@@ -1,7 +1,7 @@
 Name: mod_wsgi
 Version: 4.5.7
 Summary: A WSGI compliant interface for hosting Python based web applications on top of the Apache web server
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: Apache License, Version 2.0
 Group: System Environment/Daemons
 URL: http://modwsgi.org
@@ -11,14 +11,14 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: ea-apache24-devel
 BuildRequires: python-devel
 Requires: ea-apache24
-Requires: python
+Requires: python redhat-rpm-config
 
 %description
 A WSGI compliant interface for hosting Python based web applications on top of the Apache web server
 
 %prep
-%autosetup -n mod_wsgi-%{version}
-%setup
+%setup -q
+
 %{__cat} <<EOF > mod_wsgi.conf
 ### Load the module
 LoadModule wsgi_module modules/mod_wsgi.so
